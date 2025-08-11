@@ -27,17 +27,21 @@ const SearchBar = ({ initial, onSearch }: SearchBarProps) => {
 
   return (
     <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSearch}>
-      {({ setFieldValue }) => (
+      {({ setFieldValue, values }) => (
         <Form className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-6">
           <Field as={Input} name="location" placeholder="Location (e.g. Lekki)" />
           <Field as={Input} name="minPrice" type="number" placeholder="Min Price (₦)" />
           <Field as={Input} name="maxPrice" type="number" placeholder="Max Price (₦)" />
-          <Select onValueChange={(v) => setFieldValue('type', v)}>
+          <Select
+            // Radix Select cannot use empty string for items
+            onValueChange={(v) => setFieldValue('type', v === 'any' ? '' : v)}
+            value={values.type ? values.type : 'any'}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Property Type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Any</SelectItem>
+              <SelectItem value="any">Any</SelectItem>
               <SelectItem value="apartment">Apartment</SelectItem>
               <SelectItem value="house">House</SelectItem>
               <SelectItem value="studio">Studio</SelectItem>
