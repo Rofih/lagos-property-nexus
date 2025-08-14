@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ShieldCheck, TrendingUp, Users, MapPin } from 'lucide-react'
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api'
+import type { Libraries } from '@react-google-maps/api'
 
-const libraries: ("places" | "drawing" | "geometry" | "localContext" | "visualization")[] = ["places"];
+const libraries: Libraries = ["places"];
 
 const Index = () => {
   const [results, setResults] = useState<Property[]>(sampleProperties)

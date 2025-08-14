@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button'
 import { Helmet } from 'react-helmet-async'
 import { useFavorites } from '@/features/favorites/store'
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api'
+import type { Libraries } from '@react-google-maps/api'
 
-const libraries: ("places" | "drawing" | "geometry" | "localContext" | "visualization")[] = ["places"];
+const libraries: Libraries = ["places"];
 
 const PropertyDetail = () => {
   const { id } = useParams()

@@ -1,48 +1,58 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import L from 'leaflet'
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api'
 import { Property } from '@/features/properties/sampleData'
-import { useEffect } from 'react'
-
-// Fix default marker icons path for Vite
-const DefaultIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-})
-L.Marker.prototype.options.icon = DefaultIcon
 
 interface MapViewProps {
-  properties: Property[]
+  properties?: Property[]
+  center?: { lat: number; lng: number }
+  zoom?: number
+  className?: string
 }
 
-const MapView = ({ properties }: MapViewProps) => {
-  // Default to Lagos center
-  const center: [number, number] = [6.5244, 3.3792]
+const defaultCenter = { lat: 6.5244, lng: 3.3792 } // Lagos coordinates
 
-  useEffect(() => {
-    // no-op, placeholder for future map controls
-  }, [])
+const MapView = ({ 
+  properties = [], 
+  center = defaultCenter, 
+  zoom = 10,
+  className = "h-96 w-full rounded-lg"
+}: MapViewProps) => {
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+    libraries: ['places']
+  })
+
+  if (!isLoaded) {
+    return (
+      <div className={`${className} bg-muted animate-pulse flex items-center justify-center`}>
+        <span className="text-muted-foreground">Loading map...</span>
+      </div>
+    )
+  }
 
   return (
-    <div className="w-full h-[420px] rounded-lg overflow-hidden border border-border">
-      {/* @ts-ignore center prop is valid in react-leaflet; suppress TS noise */}
-      <MapContainer center={center as any} zoom={11} scrollWheelZoom={false} className="h-full w-full">
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {properties.map((p) => (
-          <Marker key={p.id} position={p.coordinates as any}>
-            <Popup>
-              <div className="space-y-1">
-                <div className="font-semibold">{p.title}</div>
-                <div className="text-xs text-muted-foreground">{p.location}</div>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
-    </div>
+    <GoogleMap
+      mapContainerClassName={className}
+      center={center}
+      zoom={zoom}
+      options={{
+        zoomControl: true,
+        streetViewControl: false,
+        mapTypeControl: false,
+        fullscreenControl: true,
+      }}
+    >
+      {properties.map((property) => (
+        <Marker
+          key={property.id}
+          position={{
+            lat: property.latitude || (6.5244 + Math.random() * 0.1 - 0.05),
+            lng: property.longitude || (3.3792 + Math.random() * 0.1 - 0.05)
+          }}
+          title={property.title}
+        />
+      ))}
+    </GoogleMap>
   )
 }
 

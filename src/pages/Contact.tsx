@@ -227,7 +227,7 @@ const Contact = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Building2 className="h-5 w-5 text-green-800" />
+                  <FileText className="h-5 w-5 text-green-800" />
                   Property Registration
                 </CardTitle>
               </CardHeader>
