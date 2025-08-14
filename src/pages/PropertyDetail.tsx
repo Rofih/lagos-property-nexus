@@ -3,15 +3,36 @@ import { sampleProperties } from '@/features/properties/sampleData'
 import { Button } from '@/components/ui/button'
 import { Helmet } from 'react-helmet-async'
 import { useFavorites } from '@/features/favorites/store'
+import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api'
+
+const libraries: ("places" | "drawing" | "geometry" | "localContext" | "visualization")[] = ["places"];
 
 const PropertyDetail = () => {
   const { id } = useParams()
   const property = sampleProperties.find((p) => p.id === id)
   const { ids, toggle } = useFavorites()
 
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
+    libraries,
+  });
+
   if (!property) return <div className="p-6">Property not found.</div>
 
   const isFav = ids.includes(property.id)
+
+  const mapContainerStyle = {
+    width: '100%',
+    height: '400px',
+  };
+
+  const center = {
+    lat: property.latitude || 6.5244,
+    lng: property.longitude || 3.3792,
+  };
+
+  if (loadError) return <div>Error loading maps</div>;
+  if (!isLoaded) return <div>Loading Maps...</div>;
 
   return (
     <main className="min-h-screen">
@@ -44,6 +65,16 @@ const PropertyDetail = () => {
               </Button>
             </div>
           </div>
+        </div>
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Property Location on Map</h2>
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={center}
+            zoom={15}
+          >
+            <MarkerF position={center} />
+          </GoogleMap>
         </div>
       </section>
     </main>

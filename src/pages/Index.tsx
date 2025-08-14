@@ -1,16 +1,23 @@
 
 import { Helmet } from 'react-helmet-async'
 import SearchBar, { SearchValues } from '@/components/home/SearchBar'
-import MapView from '@/components/map/MapView'
 import PropertyCard from '@/components/properties/PropertyCard'
 import { sampleProperties, Property } from '@/features/properties/sampleData'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ShieldCheck, TrendingUp, Users, MapPin } from 'lucide-react'
+import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api'
+
+const libraries: ("places" | "drawing" | "geometry" | "localContext" | "visualization")[] = ["places"];
 
 const Index = () => {
   const [results, setResults] = useState<Property[]>(sampleProperties)
+
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
+    libraries,
+  });
 
   const handleSearch = (values: SearchValues) => {
     const filtered = sampleProperties.filter((p) => {
@@ -29,6 +36,19 @@ const Index = () => {
     { icon: TrendingUp, label: 'Successful Deals', value: '3,500+' },
     { icon: MapPin, label: 'Lagos Areas', value: '25+' },
   ]
+
+  const mapContainerStyle = {
+    width: '100%',
+    height: '500px',
+  };
+
+  const center = {
+    lat: 6.5244, // Default to Lagos, Nigeria
+    lng: 3.3792,
+  };
+
+  if (loadError) return <div>Error loading maps</div>;
+  if (!isLoaded) return <div>Loading Maps...</div>;
 
   return (
     <main className="min-h-screen bg-background">
@@ -97,7 +117,24 @@ const Index = () => {
             </p>
           </div>
           <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-elevated)]">
-            <MapView properties={results} />
+            <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              center={center}
+              zoom={10}
+            >
+              {results.map((property) => (
+                property.latitude && property.longitude && (
+                  <MarkerF
+                    key={property.id}
+                    position={{
+                      lat: property.latitude,
+                      lng: property.longitude,
+                    }}
+                    title={property.title}
+                  />
+                )
+              ))}
+            </GoogleMap>
           </div>
         </div>
       </section>

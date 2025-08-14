@@ -7,7 +7,8 @@ export interface Property {
   bedrooms: number
   bathrooms: number
   amenities: string[]
-  coordinates: [number, number] // [lat, lng]
+  latitude: number
+  longitude: number
   images: string[]
   verified: boolean
 }
@@ -22,7 +23,8 @@ export const sampleProperties: Property[] = [
     bedrooms: 2,
     bathrooms: 2,
     amenities: ['parking', 'security', 'pool'],
-    coordinates: [6.4419, 3.4723],
+    latitude: 6.4419,
+    longitude: 3.4723,
     images: ['/placeholder.svg'],
     verified: true,
   },
@@ -35,7 +37,8 @@ export const sampleProperties: Property[] = [
     bedrooms: 4,
     bathrooms: 4,
     amenities: ['parking', 'solar', 'water'],
-    coordinates: [6.6018, 3.3515],
+    latitude: 6.6018,
+    longitude: 3.3515,
     images: ['/placeholder.svg'],
     verified: false,
   },
@@ -48,7 +51,8 @@ export const sampleProperties: Property[] = [
     bedrooms: 1,
     bathrooms: 1,
     amenities: ['security', 'gym'],
-    coordinates: [6.4292, 3.4219],
+    latitude: 6.4292,
+    longitude: 3.4219,
     images: ['/placeholder.svg'],
     verified: true,
   },

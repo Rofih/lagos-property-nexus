@@ -10,6 +10,10 @@ import Login from "@/pages/Auth/Login";
 import Register from "@/pages/Auth/Register";
 import PropertyDetail from "@/pages/PropertyDetail";
 import UtilityPayment from "@/pages/UtilityPayment";
+import About from "@/pages/About";
+import Services from "@/pages/Services";
+import Contact from "@/pages/Contact";
+import Regulations from "@/pages/Regulations";
 import BuyerDashboard from "@/pages/dashboards/BuyerDashboard";
 import OwnerDashboard from "@/pages/dashboards/OwnerDashboard";
 import FirmDashboard from "@/pages/dashboards/FirmDashboard";
@@ -27,6 +31,10 @@ const App = () => (
       <Navbar />
       <Routes>
         <Route path="/" element={<Index />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/regulations" element={<Regulations />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/property/:id" element={<PropertyDetail />} />
